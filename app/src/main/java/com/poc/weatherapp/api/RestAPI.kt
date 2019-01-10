@@ -14,7 +14,7 @@ interface RestAPI {
      *
      * Units=si - Query is to obtain the response in Celsius format
      */
-    @GET("{mLatitude},{mLongitude}?units=si")
+    @GET("{lat},{lng}?units=si")
     fun getWeather(@Path("lat") mLatitude: Double, @Path("lng") mLongitude: Double): Observable<WeatherData>
 
 }

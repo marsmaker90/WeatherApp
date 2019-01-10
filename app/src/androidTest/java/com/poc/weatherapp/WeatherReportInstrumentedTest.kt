@@ -1,36 +1,30 @@
 package com.poc.weatherapp
 
-import android.content.Context
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.poc.weatherapp.viewmodel.WeatherViewModel
 import org.junit.Assert
-import org.junit.Before
+import org.junit.Assert.assertEquals
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.MockitoAnnotations
+import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 
-
-class WeatherReportUnitTest {
-
-    private lateinit var context: Context
-    private lateinit var viewModel: WeatherViewModel
-
-    @Before
-    @Throws(Exception::class)
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        context = mock(Context::class.java)
-        viewModel = WeatherViewModel(context)
-
+@RunWith(AndroidJUnit4::class)
+class WeatherReportInstrumentedTest {
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().context
+        assertEquals("com.poc.weatherapp", appContext.packageName)
     }
 
-    /**
-     * To test the current weather
-     */
+
     @Test
     fun testWeatherReport() {
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val viewModel = WeatherViewModel(context)
         val signal = CountDownLatch(1)
-        viewModel.getWeatherDataUT(12.9514147, 80.2436142)
+        viewModel.getWeatherData(12.9514147, 80.2436142)
             .subscribe(
                 {
                     Assert.assertNotNull(
@@ -45,4 +39,5 @@ class WeatherReportUnitTest {
                 })
         signal.await()
     }
+
 }

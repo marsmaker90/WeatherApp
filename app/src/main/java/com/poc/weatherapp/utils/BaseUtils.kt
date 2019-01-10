@@ -2,8 +2,12 @@ package com.poc.weatherapp.utils
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
+
+private const val EXCEPTION = "EXCEPTION"
 
 class BaseUtils {
     companion object {
@@ -18,6 +22,19 @@ class BaseUtils {
             mContext.startActivity(intent)
         }
 
+        fun isNetworkConnected(mContext: Context): Boolean {
+            var connected = false
+            try {
+                val connectivityManager =
+                    mContext.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val nInfo = connectivityManager.activeNetworkInfo
+                connected = nInfo != null && nInfo.isAvailable && nInfo.isConnected
+                return connected
+            } catch (e: Exception) {
+                Log.e(EXCEPTION, e.message)
+            }
+            return connected
+        }
     }
 
 }

@@ -10,5 +10,6 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.
     </string>
+    <string name="no_internet_connection">Please check your internet connection</string>
 
 </resources>

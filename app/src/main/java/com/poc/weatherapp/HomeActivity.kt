@@ -286,14 +286,18 @@ class HomeActivity : AppCompatActivity() {
      * Method to fetch the current weather report
      */
     private fun getWeatherReport() {
-        viewModel.compositeDisposable.add(
-            viewModel.getWeatherData(mCurrentLocation?.latitude ?: 0.0, mCurrentLocation?.longitude ?: 0.0)
-                .subscribe({
-                    Toast.makeText(this, it.latitude.toString(), Toast.LENGTH_LONG).show()
-                }, {
-                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                })
-        )
+        if (BaseUtils.isNetworkConnected(this)) {
+            viewModel.compositeDisposable.add(
+                viewModel.getWeatherData(mCurrentLocation?.latitude ?: 0.0, mCurrentLocation?.longitude ?: 0.0)
+                    .subscribe({
+                        Toast.makeText(this, it.latitude.toString(), Toast.LENGTH_LONG).show()
+                    }, {
+                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    })
+            )
+        } else {
+            Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
+        }
 
     }
 
