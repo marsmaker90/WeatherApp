@@ -173,9 +173,14 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
+    override fun onStart() {
+        mRequestingLocationUpdates = true
+        super.onStart()
+    }
+
     public override fun onResume() {
         super.onResume()
-        if (mRequestingLocationUpdates && checkPermissions()) {
+        if (checkPermissions()) {
             startLocationUpdates()
         } else if (!checkPermissions() && !mPermissionNeverAskAgain) {
             requestPermissions()
