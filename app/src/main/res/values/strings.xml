@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Weather App</string>
+    <string name="settings">Settings</string>
+
+    <string name="location_settings_inadequate_warning">The location settings on the device are not
+        adequate to run this sample. Fix in Settings.
+    </string>
+
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.
+    </string>
+    <string name="no_internet_connection">Please check your internet connection</string>
+
+
+    <!--Weather API Related strings-->
+    <string name="current_weather">%1$d ℃</string>
+    <string name="current_weather_with_summary">%1$d ℃ %2$s</string>
+
+    <string name="wind">Wind: %1$.02f</string>
+    <string name="humidity">Humidity: %1$.02f</string>
+    <string name="dew">Dew Pt: %1$.02f</string>
+    <string name="uv_index">UV Index: %1$d</string>
+    <string name="visibility">Visibility: %1$.02f</string>
+    <string name="pressure">Pressure: %1$.02f</string>
+
+    <string name="clear_day">clear-day</string>
+    <string name="clear_night">clear-night</string>
+    <string name="partly_cloudy_day">partly-cloudy-day</string>
+    <string name="cloudy_night">partly-cloudy-night</string>
+    <string name="cloudy">cloudy</string>
+    <string name="rain">rain</string>
+    <string name="sleet">sleet</string>
+    <string name="snow">snow</string>
+    <string name="wind_icon">wind</string>
+    <string name="fog">fog</string>
+
 </resources>

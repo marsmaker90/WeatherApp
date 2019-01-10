@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="user_agreed_location_settings_changes">User agreed to make required location settings changes.
+    </string>
+    <string name="user_denied_location_settings_changes">User chose not to make required location settings changes.
+    </string>
+    <string name="location_settings_are_satisfied">All location settings are satisfied.</string>
+    <string name="location_settings_are_not_satisfied">Location settings are not satisfied. Attempting to upgrade,
+        location settings
+    </string>
+    <string name="unable_to_sent_request">PendingIntent unable to execute request.</string>
+    <string name="location_settings_are_inadequate">Location settings are inadequate, and cannot be fixed here. Fix in
+        Settings.
+    </string>
+    <string name="stop_location_update">stopLocationUpdates: updates never requested, no-op.</string>
+    <string name="display_permission_rationale">Displaying permission rationale to provide additional context.</string>
+    <string name="requesting_permission">Requesting permission</string>
+    <string name="on_request_permission_result">onRequestPermissionResult</string>
+    <string name="user_interaction_was_cancelled">User interaction was cancelled.</string>
+</resources>
