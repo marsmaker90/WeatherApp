@@ -11,15 +11,22 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.poc.weatherapp.adapter.WeatherDataAdapter
+import com.poc.weatherapp.model.WeatherData
 import com.poc.weatherapp.utils.BaseUtils
+import com.poc.weatherapp.utils.ProgressDialog
 import com.poc.weatherapp.utils.showSnackbar
 import com.poc.weatherapp.viewmodel.WeatherViewModel
+import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.content_main.*
 import java.text.DateFormat
 import java.util.*
 
@@ -38,13 +45,24 @@ class HomeActivity : AppCompatActivity() {
     private var mPermissionNeverAskAgain: Boolean = false
     private var mLastUpdateTime: String? = null
 
+    private lateinit var adapter: WeatherDataAdapter
+
+    private var progressDialog: ProgressDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         viewModel = WeatherViewModel(this)
-
+        progressDialog = ProgressDialog(this)
         mLastUpdateTime = ""
+
+        setSupportActionBar(toolbar)
+
+        hourlyWeatherListView.setHasFixedSize(true)
+        hourlyWeatherListView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        adapter = WeatherDataAdapter(this)
+        hourlyWeatherListView.adapter = adapter
 
         // Update values using data stored in the Bundle.
         updateValuesFromBundle(savedInstanceState)
@@ -55,6 +73,10 @@ class HomeActivity : AppCompatActivity() {
         createLocationCallback()
         createLocationRequest()
         buildLocationSettingsRequest()
+
+        fab.setOnClickListener {
+            startLocationUpdates()
+        }
     }
 
     private fun updateValuesFromBundle(savedInstanceState: Bundle?) {
@@ -287,19 +309,98 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun getWeatherReport() {
         if (BaseUtils.isNetworkConnected(this)) {
-            viewModel.compositeDisposable.add(
-                viewModel.getWeatherData(mCurrentLocation?.latitude ?: 0.0, mCurrentLocation?.longitude ?: 0.0)
-                    .subscribe({
-                        Toast.makeText(this, it.latitude.toString(), Toast.LENGTH_LONG).show()
-                    }, {
-                        Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                    })
-            )
+            if (mCurrentLocation != null) {
+                showProgress()
+                viewModel.compositeDisposable.add(
+                    viewModel.getWeatherData(mCurrentLocation?.latitude ?: 0.0, mCurrentLocation?.longitude ?: 0.0)
+                        .subscribe({
+                            dismissProgress()
+                            setCurrentWeatherUI(it)
+                            if (it.hourly.data.isNotEmpty()) {
+                                adapter.setItem(it.hourly.data)
+                            }
+                        }, {
+                            dismissProgress()
+                            Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                        })
+                )
+            }
         } else {
             Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show()
         }
 
     }
+
+    private fun setCurrentWeatherUI(weatherData: WeatherData) {
+        val current = weatherData.currently
+
+        val currentWeather =
+            getString(R.string.current_weather_with_summary, current.temperature.toInt(), current.summary)
+        txtCurrentWeather.text = currentWeather
+        txtCurrentWeatherMsg.text = BaseUtils.getDate(current.time, BaseConfig.FORMAT_DATE)
+        txtCurrentWeatherTime.text = BaseUtils.getDate(current.time, BaseConfig.FORMAT_TIME)
+
+        setWeatherDrawable(txtCurrentWeather, current.icon)
+
+        txtWind.text = getString(R.string.wind, current.windSpeed)
+        txtHumidity.text = getString(R.string.humidity, current.humidity)
+        txtDew.text = getString(R.string.dew, current.dewPoint)
+        txtPressure.text = getString(R.string.pressure, current.pressure)
+        txtVisible.text = getString(R.string.visibility, current.visibility)
+        txtUI.text = getString(R.string.uv_index, current.uvIndex)
+    }
+
+    private fun setWeatherDrawable(textView: TextView, type: String) {
+        when (type) {
+            getString(R.string.clear_day) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.clear, 0, 0, 0)
+            getString(R.string.clear_night) -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.night,
+                0,
+                0,
+                0
+            )
+            getString(R.string.partly_cloudy_day) -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.partly_cloudy,
+                0,
+                0,
+                0
+            )
+            getString(R.string.cloudy_night) -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.night_cloudy,
+                0,
+                0,
+                0
+            )
+            getString(R.string.cloudy) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cloudy, 0, 0, 0)
+            getString(R.string.rain) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.rain, 0, 0, 0)
+            getString(R.string.sleet) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sleet, 0, 0, 0)
+            getString(R.string.snow) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.snow, 0, 0, 0)
+            getString(R.string.wind_icon) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.wind, 0, 0, 0)
+            getString(R.string.fog) -> textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.foggy, 0, 0, 0)
+        }
+
+    }
+
+    /**
+     * show loading progress for complete window
+     */
+
+    fun showProgress() {
+        if (progressDialog != null && !progressDialog!!.isShowing) {
+            progressDialog?.show()
+        }
+    }
+
+    /**
+     * dismiss loading progress
+     */
+
+    fun dismissProgress() {
+        if (progressDialog != null && progressDialog!!.isShowing) {
+            progressDialog?.dismiss()
+        }
+    }
+
 
     override fun onDestroy() {
         viewModel.onDestroy()

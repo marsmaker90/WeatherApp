@@ -4,21 +4,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.poc.weatherapp.viewmodel.WeatherViewModel
 import org.junit.Assert
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 class WeatherReportInstrumentedTest {
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().context
-        assertEquals("com.poc.weatherapp", appContext.packageName)
-    }
-
-
     @Test
     fun testWeatherReport() {
         val context = InstrumentationRegistry.getInstrumentation().context

@@ -6,6 +6,8 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import java.text.SimpleDateFormat
+import java.util.*
 
 private const val EXCEPTION = "EXCEPTION"
 
@@ -35,6 +37,12 @@ class BaseUtils {
             }
             return connected
         }
-    }
 
+        fun getDate(milliseconds: Long, pattern: String): String {
+            val date = Date(milliseconds * 1000L)
+            val formatter = SimpleDateFormat(pattern, Locale.getDefault())
+            return formatter.format(date)
+        }
+
+    }
 }
