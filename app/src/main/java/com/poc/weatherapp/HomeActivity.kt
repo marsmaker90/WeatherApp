@@ -401,6 +401,10 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStop() {
+        dismissProgress()
+        super.onStop()
+    }
 
     override fun onDestroy() {
         viewModel.onDestroy()
