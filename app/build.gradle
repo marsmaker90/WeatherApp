@@ -37,4 +37,7 @@ dependencies {
 
     // Mockito
     testImplementation 'org.mockito:mockito-core:2.6.8'
+
+    // Google Location Services
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
 }
