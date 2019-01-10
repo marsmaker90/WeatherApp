@@ -34,8 +34,8 @@ class WeatherReportUnitTest {
             .subscribe(
                 {
                     Assert.assertNotNull(
-                        "Weather Data model communication is success but the actual " +
-                                "response based on the latitude and longitude need to be tested", it
+                        "Weather Data model communication is success" +
+                                "response based on the latitude and longitude", it
                     )
                     signal.countDown()
                 },
