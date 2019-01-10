@@ -30,7 +30,7 @@ class WeatherReportUnitTest {
     @Test
     fun testWeatherReport() {
         val signal = CountDownLatch(1)
-        viewModel.getWeatherData()
+        viewModel.getWeatherData(12.9514147, 80.2436142)
             .subscribe(
                 {
                     Assert.assertNotNull(

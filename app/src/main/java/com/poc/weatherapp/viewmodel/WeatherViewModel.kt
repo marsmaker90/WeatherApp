@@ -9,9 +9,11 @@ class WeatherViewModel(context: Context) : BaseViewModel(context) {
 
     /**
      * Method to get the weather report , Which emits WeatherData as Observable
+     * @param lat - Supplies latitude of the requesting location
+     * @param lng - Supplies longitude of the requesting location
      * @return Disposable Observable which contains the Weather Data
      */
-    fun getWeatherData(): Observable<WeatherData> {
-        return Observable.just(WeatherData(temperature = 0.0))
+    fun getWeatherData(lat: Double, lng: Double): Observable<WeatherData> {
+        return Observable.just(WeatherData(temperature = 0.0, latitude = lat, longitude = lng))
     }
 }
